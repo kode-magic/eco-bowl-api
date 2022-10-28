@@ -30,7 +30,7 @@ type (
 func (user *User) BeforeCreate(_ *gorm.DB) error {
 	password := utils.NumberGenerator(6)
 	user.ID = ulids.GenerateUUID()
-	user.Status = string(commons.Active)
+	user.Status = string(commons.Pending)
 	user.Password, _ = utils.HashPassword(password)
 	user.BasePassword = utils.EncodeString(password)
 	return nil
