@@ -98,7 +98,7 @@ func (d instituteRepo) Get(id string) (*core.Institution, error) {
 
 func (d instituteRepo) Update(centre *core.Institution) (string, error) {
 	var model infra.Institution
-	err := d.db.Model(&model).Where("id = ?", model.ID).Updates(infra.Institution{
+	err := d.db.Model(&model).Where("id = ?", centre.ID).Updates(infra.Institution{
 		Name:          centre.Name,
 		Description:   centre.Description,
 		Address:       centre.Address,
