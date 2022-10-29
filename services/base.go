@@ -7,4 +7,6 @@ type BaseService struct {
 	Institute core.InstitutionRepo
 	Event     core.EventRepo
 	Reward    core.RewardRepo
+	Team      core.TeamRepo
+	Trainee   core.TraineeRepo
 }
