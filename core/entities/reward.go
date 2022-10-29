@@ -9,6 +9,7 @@ type (
 		Description string    `json:"description"`
 		EventID     string    `json:"eventId"`
 		Event       Event     `json:"event"`
+		Position    int       `json:"position"`
 		CreatedAt   time.Time `json:"createdAt"`
 		UpdatedAt   time.Time `json:"updatedAt"`
 	}
@@ -31,6 +32,9 @@ func (r *Reward) Validate() map[string]string {
 	}
 	if r.EventID == "" {
 		errMessages["event"] = "event is required"
+	}
+	if r.Position < 1 {
+		errMessages["position"] = "position is required"
 	}
 
 	return errMessages
