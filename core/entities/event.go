@@ -13,6 +13,7 @@ type (
 		Institution   Institution `json:"institution"`
 		Trainees      []Trainee   `json:"trainees"`
 		Teams         []Team      `json:"teams"`
+		Rewards       []Reward    `json:"rewards"`
 		CreatedAt     time.Time   `json:"createdAt"`
 		UpdatedAt     time.Time   `json:"updatedAt"`
 	}
