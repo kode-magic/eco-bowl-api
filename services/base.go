@@ -9,4 +9,5 @@ type BaseService struct {
 	Reward    core.RewardRepo
 	Team      core.TeamRepo
 	Trainee   core.TraineeRepo
+	Solution  core.SolutionRepo
 }
