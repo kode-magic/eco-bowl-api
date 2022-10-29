@@ -23,7 +23,6 @@ func toRewardDomain(model infra.Reward) *core.Reward {
 		ID:          model.ID.String(),
 		Name:        model.Name,
 		Description: model.Description,
-		Offers:      model.Offers,
 		CreatedAt:   model.CreatedAt,
 		UpdatedAt:   model.UpdatedAt,
 	}
@@ -33,7 +32,6 @@ func toRewardPersistence(model core.Reward) *infra.Reward {
 	return &infra.Reward{
 		Name:        model.Name,
 		Description: model.Description,
-		Offers:      model.Offers,
 		EventID:     model.Event.ID,
 	}
 }
@@ -100,7 +98,6 @@ func (d rewardRepo) Update(reward *core.Reward) (string, error) {
 	err := d.db.Model(&model).Where("id = ?", model.ID).Updates(infra.Reward{
 		Name:        reward.Name,
 		Description: reward.Description,
-		Offers:      reward.Offers,
 		EventID:     reward.Event.ID,
 	}).Error
 
