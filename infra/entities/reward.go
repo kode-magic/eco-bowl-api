@@ -13,6 +13,7 @@ type Reward struct {
 	Description string    `gorm:"default:null;"`
 	EventID     string    `gorm:"not null;"`
 	Event       Event
+	Position    int       `gorm:"not null;"`
 	CreatedAt   time.Time `gorm:"default:CURRENT_TIMESTAMP"`
 	UpdatedAt   time.Time `gorm:"default:CURRENT_TIMESTAMP"`
 }
