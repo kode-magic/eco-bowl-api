@@ -22,6 +22,8 @@ func main() {
 		Institute: dbService.Institute,
 		Event:     dbService.Event,
 		Reward:    dbService.Reward,
+		Trainee:   dbService.Trainee,
+		Team:      dbService.Team,
 	}
 
 	app.App(base)
