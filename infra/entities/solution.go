@@ -15,6 +15,9 @@ type Solution struct {
 	Event       Event
 	TeamID      string `gorm:"not null;"`
 	Team        Team
+	RewardID    string `gorm:"default:null;"`
+	Reward      Reward
+	Position    int       `gorm:"default:0"`
 	CreatedAt   time.Time `gorm:"default:CURRENT_TIMESTAMP"`
 	UpdatedAt   time.Time `gorm:"default:CURRENT_TIMESTAMP"`
 }
