@@ -182,7 +182,7 @@ func SolutionRouter(router fiber.Router, services service.BaseService, session *
 	solution := SolutionConstructor(service.SolutionService{Repo: services.Solution}, session)
 	routes := router.Group("/solution")
 	routes.Post("/", solution.Create)
-	routes.Get("/", solution.List)
+	routes.Get("/event/:event_id", solution.List)
 	routes.Get("/:id", solution.Get)
 	routes.Patch("/:id", solution.AddedReward)
 
