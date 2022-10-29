@@ -95,7 +95,7 @@ func (d rewardRepo) Get(id string) (*core.Reward, error) {
 
 func (d rewardRepo) Update(reward *core.Reward) (string, error) {
 	var model infra.Reward
-	err := d.db.Model(&model).Where("id = ?", model.ID).Updates(infra.Reward{
+	err := d.db.Model(&model).Where("id = ?", reward.ID).Updates(infra.Reward{
 		Name:        reward.Name,
 		Description: reward.Description,
 		EventID:     reward.Event.ID,
