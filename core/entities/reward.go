@@ -16,7 +16,7 @@ type (
 
 	RewardRepo interface {
 		Create(reward *Reward) (*Reward, map[string]string)
-		List() (*[]Reward, error)
+		List(event string) (*[]Reward, error)
 		Get(id string) (*Reward, error)
 		Update(reward *Reward) (string, error)
 	}
