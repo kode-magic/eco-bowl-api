@@ -41,6 +41,7 @@ func ToTraineePersistence(model core.Trainee) *infra.Trainee {
 		Phone:         model.Phone,
 		Email:         model.Email,
 		EventID:       model.EventID,
+		TeamID:        model.TeamID,
 		Qualification: model.Qualification,
 	}
 }
