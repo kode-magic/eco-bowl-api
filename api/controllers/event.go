@@ -195,4 +195,6 @@ func EventRouter(router fiber.Router, services service.BaseService, session *ses
 	routes.Get("/:id", event.Get)
 	routes.Patch("/:id", event.Update)
 
+	authRoutes := router.Group("/auth")
+	authRoutes.Get("/:id/get-event", event.Get)
 }
