@@ -15,4 +15,5 @@ func BaseController(app *fiber.App, appServices services.BaseService, session *s
 	TraineeRoute(api, appServices, session)
 	TeamRouter(api, appServices, session)
 	SolutionRouter(api, appServices, session)
+	EntrepreneurRoute(api, appServices, session)
 }
