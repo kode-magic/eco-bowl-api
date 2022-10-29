@@ -27,7 +27,7 @@ func (r *Reward) Validate() map[string]string {
 		errMessages["name"] = "name is required"
 	}
 	if r.Description == "" {
-		errMessages["address"] = "address is required"
+		errMessages["description"] = "description is required"
 	}
 	if r.EventID == "" {
 		errMessages["event"] = "event is required"
