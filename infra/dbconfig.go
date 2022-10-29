@@ -17,6 +17,8 @@ type Repositories struct {
 	Institute core.InstitutionRepo
 	Event     core.EventRepo
 	Reward    core.RewardRepo
+	Team      core.TeamRepo
+	Trainee   core.TraineeRepo
 	db        *gorm.DB
 }
 
@@ -40,6 +42,8 @@ func DBConfiguration() (*Repositories, error) {
 		Institute: persist.NewInstituteRepo(db),
 		Event:     persist.NewEventRepo(db),
 		Reward:    persist.NewRewardRepo(db),
+		Team:      persist.NewTeamRepo(db),
+		Trainee:   persist.NewTraineeRepo(db),
 		db:        db,
 	}, nil
 }
@@ -57,5 +61,7 @@ func (s *Repositories) AutoMigrate() error {
 		&infra.Institution{},
 		&infra.Event{},
 		&infra.Reward{},
+		&infra.Team{},
+		&infra.Trainee{},
 	)
 }
