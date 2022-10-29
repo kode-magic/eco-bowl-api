@@ -29,6 +29,7 @@ type (
 		Get(id string) (*Trainee, error)
 		GetByPhoneEmail(event, phoneEmail string) (*Trainee, error)
 		GetByEmail(event, email string) (*Trainee, error)
+		AddToTeam(trainee *Trainee) (*Trainee, error)
 	}
 )
 
