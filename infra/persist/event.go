@@ -2,6 +2,7 @@ package persist
 
 import (
 	"errors"
+	enum "github.com/kode-magic/eco-bowl-api/core/commons"
 	core "github.com/kode-magic/eco-bowl-api/core/entities"
 	infra "github.com/kode-magic/eco-bowl-api/infra/entities"
 	"github.com/kode-magic/go-bowl/ulids"
@@ -19,6 +20,48 @@ func NewEventRepo(db *gorm.DB) *eventRepo {
 }
 
 func toEventDomain(model infra.Event) *core.Event {
+	rewards := make([]core.Reward, len(model.Rewards))
+	for i, reward := range model.Rewards {
+		rewards[i] = core.Reward{
+			ID:          reward.ID.String(),
+			Name:        reward.Name,
+			Description: reward.Description,
+			CreatedAt:   reward.CreatedAt,
+			UpdatedAt:   reward.UpdatedAt,
+		}
+	}
+
+	teams := make([]core.Team, len(model.Teams))
+	for i, team := range model.Teams {
+		teams[i] = core.Team{
+			ID:          team.ID.String(),
+			Name:        team.Name,
+			Description: team.Description,
+			CreatedAt:   team.CreatedAt,
+			UpdatedAt:   team.UpdatedAt,
+		}
+	}
+
+	trainees := make([]core.Trainee, len(model.Trainees))
+	for i, trainee := range model.Trainees {
+		trainees[i] = core.Trainee{
+			ID:            trainee.ID.String(),
+			Forename:      trainee.Forename,
+			Surname:       trainee.Surname,
+			Gender:        enum.Genders(trainee.Gender),
+			Phone:         trainee.Phone,
+			Email:         trainee.Email,
+			Qualification: trainee.Qualification,
+			BirthDate:     trainee.BirthDate,
+			Team: core.Team{
+				ID:   trainee.TeamID,
+				Name: trainee.Team.Name,
+			},
+			CreatedAt: trainee.CreatedAt,
+			UpdatedAt: trainee.UpdatedAt,
+		}
+	}
+
 	return &core.Event{
 		ID:          model.ID.String(),
 		Name:        model.Name,
@@ -32,6 +75,9 @@ func toEventDomain(model infra.Event) *core.Event {
 			Address:       model.Institution.Address,
 			ContactPerson: core.Contact(model.Institution.ContactPerson),
 		},
+		Rewards:   rewards,
+		Teams:     teams,
+		Trainees:  trainees,
 		CreatedAt: model.CreatedAt,
 		UpdatedAt: model.UpdatedAt,
 	}
@@ -91,7 +137,7 @@ func (d eventRepo) Get(id string) (*core.Event, error) {
 
 	ID := ulids.ConvertToUUID(id)
 
-	err := d.db.Preload("Institution").Preload("Trainees").Preload("Teams").Preload("Rewards").Where("id = ?", ID).Take(&event).Error
+	err := d.db.Preload("Institution").Preload("Trainees.Team").Preload("Teams").Preload("Rewards").Where("id = ?", ID).Take(&event).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, errors.New("event not found")
