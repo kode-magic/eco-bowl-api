@@ -152,7 +152,7 @@ func (d eventRepo) Get(id string) (*core.Event, error) {
 
 func (d eventRepo) Update(event *core.Event) (string, error) {
 	var model infra.Event
-	err := d.db.Model(&model).Where("id = ?", model.ID).Updates(infra.Event{
+	err := d.db.Model(&model).Where("id = ?", event.ID).Updates(infra.Event{
 		Name:          event.Name,
 		Description:   event.Description,
 		StartDate:     event.StartDate,
