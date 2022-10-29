@@ -27,6 +27,8 @@ func toTeamDomain(model infra.Team) *core.Team {
 			Forename:      trainee.Forename,
 			Surname:       trainee.Surname,
 			Gender:        enum.Genders(trainee.Gender),
+			Phone:         trainee.Phone,
+			Email:         trainee.Email,
 			BirthDate:     trainee.BirthDate,
 			Qualification: trainee.Qualification,
 			CreatedAt:     trainee.CreatedAt,
