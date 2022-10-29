@@ -137,7 +137,7 @@ func (d eventRepo) Get(id string) (*core.Event, error) {
 
 	ID := ulids.ConvertToUUID(id)
 
-	err := d.db.Preload("Institution").Preload("Trainees.Team").Preload("Teams").Preload("Rewards").Where("id = ?", ID).Take(&event).Error
+	err := d.db.Preload("Institution").Preload("Trainees.Team").Preload("Teams.Trainees").Preload("Rewards").Where("id = ?", ID).Take(&event).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, errors.New("event not found")
