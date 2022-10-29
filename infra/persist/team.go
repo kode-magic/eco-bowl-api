@@ -2,6 +2,7 @@ package persist
 
 import (
 	"errors"
+	enum "github.com/kode-magic/eco-bowl-api/core/commons"
 	core "github.com/kode-magic/eco-bowl-api/core/entities"
 	infra "github.com/kode-magic/eco-bowl-api/infra/entities"
 	"github.com/kode-magic/go-bowl/ulids"
@@ -19,6 +20,19 @@ func NewTeamRepo(db *gorm.DB) *teamRepo {
 }
 
 func toTeamDomain(model infra.Team) *core.Team {
+	trainees := make([]core.Trainee, len(model.Trainees))
+	for i, trainee := range model.Trainees {
+		trainees[i] = core.Trainee{
+			ID:            trainee.ID.String(),
+			Forename:      trainee.Forename,
+			Surname:       trainee.Surname,
+			Gender:        enum.Genders(trainee.Gender),
+			BirthDate:     trainee.BirthDate,
+			Qualification: trainee.Qualification,
+			CreatedAt:     trainee.CreatedAt,
+			UpdatedAt:     trainee.UpdatedAt,
+		}
+	}
 	return &core.Team{
 		ID:          model.ID.String(),
 		Name:        model.Name,
@@ -30,6 +44,7 @@ func toTeamDomain(model infra.Team) *core.Team {
 			StartDate:   model.Event.StartDate,
 			EndDate:     model.Event.EndDate,
 		},
+		Trainees:  trainees,
 		CreatedAt: model.CreatedAt,
 		UpdatedAt: model.UpdatedAt,
 	}
