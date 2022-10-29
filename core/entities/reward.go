@@ -7,7 +7,6 @@ type (
 		ID          string    `json:"id"`
 		Name        string    `json:"name"`
 		Description string    `json:"description"`
-		Offers      []string  `json:"offers"`
 		EventID     string    `json:"eventId"`
 		Event       Event     `json:"event"`
 		CreatedAt   time.Time `json:"createdAt"`
@@ -29,9 +28,6 @@ func (r *Reward) Validate() map[string]string {
 	}
 	if r.Description == "" {
 		errMessages["address"] = "address is required"
-	}
-	if len(r.Offers) == 0 {
-		errMessages["offers"] = "provide offers"
 	}
 	if r.EventID == "" {
 		errMessages["event"] = "event is required"
