@@ -95,6 +95,6 @@ func TeamRouter(router fiber.Router, services service.BaseService, session *sess
 	authRoutes.Post("/:event_id/team", team.Create)
 
 	routes := router.Group("/team")
-	routes.Get("/:event_id", team.List)
+	routes.Get("/event/:event_id", team.List)
 
 }
