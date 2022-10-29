@@ -11,6 +11,9 @@ type (
 		Event       Event     `json:"event"`
 		TeamID      string    `json:"teamId"`
 		Team        Team      `json:"team"`
+		RewardID    string    `json:"RewardId"`
+		Reward      Reward    `json:"reward"`
+		Position    int       `json:"position"`
 		CreatedAt   time.Time `json:"createdAt"`
 		UpdatedAt   time.Time `json:"updatedAt"`
 	}
@@ -20,6 +23,7 @@ type (
 		List(event string) (*[]Solution, error)
 		Get(id string) (*Solution, error)
 		Update(solution *Solution) (string, error)
+		AddReward(solution *Solution) (string, error)
 	}
 )
 
