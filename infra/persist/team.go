@@ -123,17 +123,17 @@ func (d teamRepo) Delete(id string) (string, error) {
 	return "Team deleted successfully", nil
 }
 
-func (d teamRepo) GetByName(name string) (*core.Team, error) {
-	var centre infra.Team
+func (d teamRepo) GetByName(event, name string) (*core.Team, error) {
+	var team infra.Team
 
-	err := d.db.Where("name = ?", name).Take(&centre).Error
+	err := d.db.Where("event_id = ? AND name = ?", event, name).Take(&team).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, errors.New("institution with name " + name + " not found")
+			return nil, errors.New("team with name " + name + " not found")
 		} else {
 			return nil, err
 		}
 	}
 
-	return toTeamDomain(centre), nil
+	return toTeamDomain(team), nil
 }
