@@ -63,9 +63,38 @@ func (t *Team) Create(ctx *fiber.Ctx) error {
 	return nil
 }
 
+func (t *Team) List(ctx *fiber.Ctx) error {
+	eventId := ctx.Params("event_id", "")
+	res, err := t.Service.List(eventId)
+
+	if err != nil {
+		ctxErr := ctx.Status(fiber.StatusInternalServerError).JSON(err.Error())
+
+		if ctxErr != nil {
+			return ctxErr
+		}
+
+		return nil
+	}
+
+	ctxErr := ctx.Status(fiber.StatusCreated).JSON(fiber.Map{
+		"success": true,
+		"data":    res,
+	})
+
+	if ctxErr != nil {
+		return ctxErr
+	}
+
+	return nil
+}
+
 func TeamRouter(router fiber.Router, services service.BaseService, session *session.Store) {
 	team := TeamConstructor(service.TeamService{Repo: services.Team, TraineeRepo: services.Trainee}, session)
-	routes := router.Group("/auth")
-	routes.Post("/:event_id/team", team.Create)
+	authRoutes := router.Group("/auth")
+	authRoutes.Post("/:event_id/team", team.Create)
+
+	routes := router.Group("/team")
+	routes.Get("/:event_id", team.List)
 
 }
