@@ -123,7 +123,7 @@ func (t traineeRepo) GetByEmail(event, email string) (*core.Trainee, error) {
 
 func (t traineeRepo) AddToTeam(trainee *core.Trainee) (*core.Trainee, error) {
 	var model infra.Trainee
-	err := t.db.Model(&model).Where("id = ?", model.ID).Updates(infra.Trainee{
+	err := t.db.Model(&model).Where("id = ?", trainee.ID).Updates(infra.Trainee{
 		TeamID: trainee.TeamID,
 	}).Error
 
