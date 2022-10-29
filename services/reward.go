@@ -12,8 +12,8 @@ func (r *RewardService) Create(centre *core.Reward) (*core.Reward, map[string]st
 	return r.Repo.Create(centre)
 }
 
-func (r *RewardService) List() (*[]core.Reward, error) {
-	return r.Repo.List()
+func (r *RewardService) List(event string) (*[]core.Reward, error) {
+	return r.Repo.List(event)
 }
 
 func (r *RewardService) Get(id string) (*core.Reward, error) {
