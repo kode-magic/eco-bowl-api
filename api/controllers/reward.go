@@ -75,7 +75,8 @@ func (i *Reward) Create(ctx *fiber.Ctx) error {
 }
 
 func (i *Reward) List(ctx *fiber.Ctx) error {
-	rewards, err := i.Service.List()
+	eventId := ctx.Params("event_id", "")
+	rewards, err := i.Service.List(eventId)
 	if err != nil {
 		ctxErr := ctx.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
 			"success": false,
