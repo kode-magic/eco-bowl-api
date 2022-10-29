@@ -133,7 +133,8 @@ func TraineeRoute(router fiber.Router, services service.BaseService, session *se
 	trainee := TraineeConstructor(service.TraineeService{Repo: services.Trainee}, session)
 
 	userRoutes := router.Group("/trainee")
-	userRoutes.Get("/trainee/:id", trainee.Get)
+	userRoutes.Get("/:id", trainee.Get)
+	userRoutes.Get("/event/:event_id", trainee.List)
 
 	authRoutes := router.Group("/auth")
 	authRoutes.Post("/:event_id/trainee", trainee.Add)
