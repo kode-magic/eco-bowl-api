@@ -42,7 +42,7 @@ func toEventPersistence(model core.Event) *infra.Event {
 		Name:          model.Name,
 		Description:   model.Description,
 		StartDate:     model.StartDate,
-		EndDate:       model.StartDate,
+		EndDate:       model.EndDate,
 		InstitutionID: model.Institution.ID,
 	}
 }
@@ -64,7 +64,7 @@ func (d eventRepo) Create(event *core.Event) (*core.Event, map[string]string) {
 
 func (d eventRepo) List() (*[]core.Event, error) {
 	var dbEvents []infra.Event
-	err := d.db.Find(&dbEvents).Error
+	err := d.db.Preload("Institution").Preload("Trainees").Preload("Teams").Find(&dbEvents).Error
 
 	if err != nil {
 		return nil, err
@@ -91,7 +91,7 @@ func (d eventRepo) Get(id string) (*core.Event, error) {
 
 	ID := ulids.ConvertToUUID(id)
 
-	err := d.db.Where("id = ?", ID).Take(&event).Error
+	err := d.db.Preload("Institution").Preload("Trainees").Preload("Teams").Where("id = ?", ID).Take(&event).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, errors.New("event not found")
