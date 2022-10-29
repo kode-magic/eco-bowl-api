@@ -29,7 +29,7 @@ func (t TeamService) Create(param *TeamRequest) (*core.Team, map[string]string) 
 				ID: param.Event,
 			},
 		}
-		team, teamErr := t.Repo.Create(&teamCreate)
+		teamData, teamErr := t.Repo.Create(&teamCreate)
 		if teamErr != nil {
 			return nil, teamErr
 		}
@@ -39,16 +39,16 @@ func (t TeamService) Create(param *TeamRequest) (*core.Team, map[string]string) 
 		for i, member := range param.Members {
 			addTrainees := core.Trainee{
 				ID:     member,
-				TeamID: team.ID,
+				TeamID: teamData.ID,
 			}
 
 			trainee, _ := t.TraineeRepo.AddToTeam(&addTrainees)
 			members[i] = *trainee
 		}
 
-		team.Trainees = members
+		teamData.Trainees = members
 
-		return team, nil
+		return teamData, nil
 	}
 
 	errMessage := make(map[string]string)
