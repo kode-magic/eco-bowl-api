@@ -58,9 +58,9 @@ func (d teamRepo) Create(team *core.Team) (*core.Team, map[string]string) {
 	return toTeamDomain(*createCentre), nil
 }
 
-func (d teamRepo) List() (*[]core.Team, error) {
+func (d teamRepo) List(event string) (*[]core.Team, error) {
 	var dbTeams []infra.Team
-	err := d.db.Find(&dbTeams).Error
+	err := d.db.Preload("Trainees").Where("event_id = ?", event).Find(&dbTeams).Error
 
 	if err != nil {
 		return nil, err
