@@ -19,6 +19,7 @@ type Repositories struct {
 	Reward    core.RewardRepo
 	Team      core.TeamRepo
 	Trainee   core.TraineeRepo
+	Solution  core.SolutionRepo
 	db        *gorm.DB
 }
 
@@ -44,6 +45,7 @@ func DBConfiguration() (*Repositories, error) {
 		Reward:    persist.NewRewardRepo(db),
 		Team:      persist.NewTeamRepo(db),
 		Trainee:   persist.NewTraineeRepo(db),
+		Solution:  persist.NewSolutionRepo(db),
 		db:        db,
 	}, nil
 }
@@ -63,5 +65,6 @@ func (s *Repositories) AutoMigrate() error {
 		&infra.Reward{},
 		&infra.Team{},
 		&infra.Trainee{},
+		&infra.Solution{},
 	)
 }
