@@ -11,7 +11,6 @@ type Reward struct {
 	ID          uuid.UUID `gorm:"type:uuid;"`
 	Name        string    `gorm:"not null;"`
 	Description string    `gorm:"default:null;"`
-	Offers      []string  `gorm:"type:text[];not null;"`
 	EventID     string    `gorm:"not null;"`
 	Event       Event
 	CreatedAt   time.Time `gorm:"default:CURRENT_TIMESTAMP"`
