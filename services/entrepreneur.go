@@ -9,14 +9,16 @@ type EntrepreneurService struct {
 }
 
 func (t EntrepreneurService) Add(record *core.Entrepreneur) (*core.Entrepreneur, map[string]string) {
-	errMsg := make(map[string]string)
-	_, phoneErr := t.Repo.GetByPhoneEmail(record.Email, record.Phone)
-	if phoneErr != nil {
-		return t.Repo.Create(record)
-	}
+	//errMsg := make(map[string]string)
+	//_, phoneErr := t.Repo.GetByPhoneEmail(record.Email, record.Phone)
+	//if phoneErr != nil {
+	//
+	//}
+	//
+	//errMsg["person"] = "person with email and(or) phone already exist"
+	//return nil, errMsg
 
-	errMsg["person"] = "person with email and(or) phone already exist"
-	return nil, errMsg
+	return t.Repo.Create(record)
 }
 
 func (t EntrepreneurService) List() (*[]core.Entrepreneur, error) {

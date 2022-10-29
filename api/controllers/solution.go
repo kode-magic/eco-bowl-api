@@ -181,7 +181,6 @@ func (i *Solution) AddedReward(ctx *fiber.Ctx) error {
 func SolutionRouter(router fiber.Router, services service.BaseService, session *session.Store) {
 	solution := SolutionConstructor(service.SolutionService{Repo: services.Solution}, session)
 	routes := router.Group("/solution")
-	routes.Post("/", solution.Create)
 	routes.Get("/event/:event_id", solution.List)
 	routes.Get("/:id", solution.Get)
 	routes.Patch("/:id", solution.AddedReward)

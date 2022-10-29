@@ -43,7 +43,7 @@ func (s *SolutionService) AddedReward(request *SolutionRewardRequest) (string, e
 	if solErr != nil {
 		return "", solErr
 	}
-	solution.RewardID = reward.ID
+	solution.RewardID = request.Reward
 	solution.Reward = *reward
 	solution.Position = reward.Position
 

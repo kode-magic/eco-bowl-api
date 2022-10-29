@@ -18,13 +18,14 @@ func main() {
 	dbService := ConnectDB()
 
 	base := service.BaseService{
-		User:      dbService.User,
-		Institute: dbService.Institute,
-		Event:     dbService.Event,
-		Reward:    dbService.Reward,
-		Trainee:   dbService.Trainee,
-		Team:      dbService.Team,
-		Solution:  dbService.Solution,
+		User:         dbService.User,
+		Institute:    dbService.Institute,
+		Event:        dbService.Event,
+		Reward:       dbService.Reward,
+		Trainee:      dbService.Trainee,
+		Team:         dbService.Team,
+		Solution:     dbService.Solution,
+		Entrepreneur: dbService.Entrepreneur,
 	}
 
 	app.App(base)

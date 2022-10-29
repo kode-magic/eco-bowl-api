@@ -13,37 +13,71 @@ type businessRepo struct {
 	db *gorm.DB
 }
 
-var _ core.RewardRepo = &businessRepo{}
+var _ core.BusinessRepo = &businessRepo{}
 
 func NewBusinessRepo(db *gorm.DB) *businessRepo {
 	return &businessRepo{db}
 }
 
-func toRewardDomain(model infra.Business) *core.Business {
+func toBusinessDomain(model infra.Business) *core.Business {
+	growths := make([]core.Growth, len(model.Growths))
+	for i, growth := range model.Growths {
+		growths[i] = core.Growth{
+			ID:          growth.ID.String(),
+			Year:        growth.Year,
+			NetWorth:    growth.NetWorth,
+			Income:      growth.Income,
+			Expenditure: growth.Expenditure,
+			Assets:      growth.Assets,
+			CreatedAt:   growth.CreatedAt,
+			UpdatedAt:   growth.UpdatedAt,
+		}
+	}
+
+	entrepreneurs := make([]core.Entrepreneur, len(model.Entrepreneurs))
+	for i, entrepreneur := range model.Entrepreneurs {
+		entrepreneurs[i] = core.Entrepreneur{
+			ID:        entrepreneur.ID.String(),
+			Forename:  entrepreneur.Forename,
+			Surname:   entrepreneur.Surname,
+			Gender:    enum.Genders(entrepreneur.Gender),
+			Phone:     entrepreneur.Phone,
+			Email:     entrepreneur.Email,
+			BirthDate: entrepreneur.BirthDate,
+			CreatedAt: entrepreneur.CreatedAt,
+			UpdatedAt: entrepreneur.UpdatedAt,
+		}
+	}
 	return &core.Business{
-		ID:          model.ID.String(),
-		Name:        model.Name,
-		Description: model.Description,
-		Founded:     model.Founded,
-		Type:        enum.BusinessTypes(model.Type),
-		CreatedAt:   model.CreatedAt,
-		UpdatedAt:   model.UpdatedAt,
+		ID:            model.ID.String(),
+		Name:          model.Name,
+		Description:   model.Description,
+		Founded:       model.Founded,
+		Type:          enum.BusinessTypes(model.Type),
+		Level:         enum.BusinessLevels(model.Level),
+		ContactPerson: core.Contact(model.ContactPerson),
+		Growths:       growths,
+		Entrepreneurs: entrepreneurs,
+		CreatedAt:     model.CreatedAt,
+		UpdatedAt:     model.UpdatedAt,
 	}
 }
 
-func toRewardPersistence(model core.Reward) *infra.Reward {
-	return &infra.Reward{
-		Name:        model.Name,
-		Description: model.Description,
-		EventID:     model.Event.ID,
-		Position:    model.Position,
+func toBusinessPersistence(model core.Business) *infra.Business {
+	return &infra.Business{
+		Name:          model.Name,
+		Description:   model.Description,
+		Founded:       model.Founded,
+		Type:          string(model.Type),
+		Level:         string(model.Level),
+		ContactPerson: infra.Contact(model.ContactPerson),
 	}
 }
 
-func (d rewardRepo) Create(reward *core.Reward) (*core.Reward, map[string]string) {
+func (d businessRepo) Create(business *core.Business) (*core.Business, map[string]string) {
 	infraErr := map[string]string{}
 
-	createCentre := toRewardPersistence(*reward)
+	createCentre := toBusinessPersistence(*business)
 
 	err := d.db.Create(&createCentre).Error
 
@@ -52,73 +86,108 @@ func (d rewardRepo) Create(reward *core.Reward) (*core.Reward, map[string]string
 		return nil, infraErr
 	}
 
-	return toRewardDomain(*createCentre), nil
+	return toBusinessDomain(*createCentre), nil
 }
 
-func (d rewardRepo) List(event string) (*[]core.Reward, error) {
-	var dbRewards []infra.Reward
-	err := d.db.Where("event_id = ?", event).Find(&dbRewards).Error
+func (d businessRepo) List() (*[]core.Business, error) {
+	var dbRewards []infra.Business
+	err := d.db.Preload("Entrepreneurs").Preload("Growths").Find(&dbRewards).Error
 
 	if err != nil {
 		return nil, err
 	}
 
-	rewards := make([]core.Reward, len(dbRewards))
+	businesses := make([]core.Business, len(dbRewards))
 
 	for i, reward := range dbRewards {
-		toDomain := toRewardDomain(reward)
+		toDomain := toBusinessDomain(reward)
 
 		if err != nil {
 			return nil, err
 		}
 
-		rewards[i] = *toDomain
+		businesses[i] = *toDomain
 	}
 
-	return &rewards, nil
+	return &businesses, nil
 
 }
 
-func (d rewardRepo) Get(id string) (*core.Reward, error) {
-	var reward infra.Reward
+func (d businessRepo) Get(id string) (*core.Business, error) {
+	var business infra.Business
 
 	ID := ulids.ConvertToUUID(id)
 
-	err := d.db.Where("id = ?", ID).Take(&reward).Error
+	err := d.db.Where("id = ?", ID).Take(&business).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, errors.New("reward not found")
+			return nil, errors.New("business not found")
 		} else {
 			return nil, err
 		}
 
 	}
 
-	return toRewardDomain(reward), nil
+	return toBusinessDomain(business), nil
 }
 
-func (d rewardRepo) Update(reward *core.Reward) (string, error) {
-	var model infra.Reward
-	err := d.db.Model(&model).Where("id = ?", reward.ID).Updates(infra.Reward{
-		Name:        reward.Name,
-		Description: reward.Description,
-		EventID:     reward.Event.ID,
-		Position:    model.Position,
+func (d businessRepo) Update(reward *core.Business) (string, error) {
+	var model infra.Business
+	err := d.db.Model(&model).Where("id = ?", reward.ID).Updates(infra.Business{
+		Name:          reward.Name,
+		Description:   reward.Description,
+		Founded:       reward.Founded,
+		Type:          string(reward.Type),
+		Level:         string(reward.Level),
+		ContactPerson: infra.Contact(reward.ContactPerson),
 	}).Error
 
 	if err != nil {
 		return "", err
 	}
 
-	return "Reward updated successful", nil
+	return "Business updated successful", nil
 }
 
-func (d rewardRepo) Delete(id string) (string, error) {
-	var reward infra.Reward
+func (d businessRepo) Delete(id string) (string, error) {
+	var business infra.Business
 	ID := ulids.ConvertToUUID(id)
-	err := d.db.Delete(&reward, "id = ?", ID).Error
+	err := d.db.Delete(&business, "id = ?", ID).Error
 	if err != nil {
 		return "", err
 	}
-	return "Reward deleted successfully", nil
+	return "Business deleted successfully", nil
+}
+
+func (d businessRepo) GetByName(name string) (*core.Business, error) {
+	var business infra.Business
+
+	err := d.db.Where("name = ?", name).Take(&business).Error
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, errors.New("business with name " + name + " not found")
+		} else {
+			return nil, err
+		}
+	}
+
+	return toBusinessDomain(business), nil
+}
+
+func (d businessRepo) AddGrowthToBusiness(growth *core.Growth) (string, error) {
+	createGrowth := infra.Growth{
+		Year:        growth.Year,
+		NetWorth:    growth.NetWorth,
+		Income:      growth.Income,
+		Expenditure: growth.Expenditure,
+		Assets:      growth.Assets,
+		BusinessID:  growth.BusinessID,
+	}
+	err := d.db.Create(createGrowth).Error
+
+	if err != nil {
+		return "", err
+	}
+
+	return "Growth successfully added to business", nil
 }
