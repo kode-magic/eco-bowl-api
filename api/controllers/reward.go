@@ -192,7 +192,7 @@ func RewardRouter(router fiber.Router, services service.BaseService, session *se
 	reward := RewardConstructor(service.RewardService{Repo: services.Reward}, session)
 	routes := router.Group("/reward")
 	routes.Post("/", reward.Create)
-	routes.Get("/", reward.List)
+	routes.Get("/event/:event_id", reward.List)
 	routes.Get("/:id", reward.Get)
 	routes.Patch("/:id", reward.Update)
 
