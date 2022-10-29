@@ -13,14 +13,15 @@ import (
 )
 
 type Repositories struct {
-	User      core.UserRepository
-	Institute core.InstitutionRepo
-	Event     core.EventRepo
-	Reward    core.RewardRepo
-	Team      core.TeamRepo
-	Trainee   core.TraineeRepo
-	Solution  core.SolutionRepo
-	db        *gorm.DB
+	User         core.UserRepository
+	Institute    core.InstitutionRepo
+	Event        core.EventRepo
+	Reward       core.RewardRepo
+	Team         core.TeamRepo
+	Trainee      core.TraineeRepo
+	Solution     core.SolutionRepo
+	Entrepreneur core.EntrepreneurRepo
+	db           *gorm.DB
 }
 
 func DBConfiguration() (*Repositories, error) {
@@ -39,14 +40,15 @@ func DBConfiguration() (*Repositories, error) {
 	}
 
 	return &Repositories{
-		User:      persist.NewUserRepo(db),
-		Institute: persist.NewInstituteRepo(db),
-		Event:     persist.NewEventRepo(db),
-		Reward:    persist.NewRewardRepo(db),
-		Team:      persist.NewTeamRepo(db),
-		Trainee:   persist.NewTraineeRepo(db),
-		Solution:  persist.NewSolutionRepo(db),
-		db:        db,
+		User:         persist.NewUserRepo(db),
+		Institute:    persist.NewInstituteRepo(db),
+		Event:        persist.NewEventRepo(db),
+		Reward:       persist.NewRewardRepo(db),
+		Team:         persist.NewTeamRepo(db),
+		Trainee:      persist.NewTraineeRepo(db),
+		Solution:     persist.NewSolutionRepo(db),
+		Entrepreneur: persist.NewEntrepreneurRepo(db),
+		db:           db,
 	}, nil
 }
 
@@ -66,5 +68,8 @@ func (s *Repositories) AutoMigrate() error {
 		&infra.Team{},
 		&infra.Trainee{},
 		&infra.Solution{},
+		&infra.Business{},
+		&infra.Entrepreneur{},
+		&infra.Growth{},
 	)
 }
