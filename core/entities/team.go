@@ -16,7 +16,7 @@ type (
 
 	TeamRepo interface {
 		Create(team *Team) (*Team, map[string]string)
-		List() (*[]Team, error)
+		List(event string) (*[]Team, error)
 		Get(id string) (*Team, error)
 		Update(team *Team) (string, error)
 		GetByName(event, name string) (*Team, error)
