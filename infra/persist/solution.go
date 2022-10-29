@@ -128,7 +128,7 @@ func (d solutionRepo) Update(solution *core.Solution) (string, error) {
 
 func (d solutionRepo) AddReward(solution *core.Solution) (string, error) {
 	var model infra.Solution
-	err := d.db.Model(&model).Where("id = ?", model.ID).Updates(infra.Solution{
+	err := d.db.Model(&model).Where("id = ?", solution.ID).Updates(infra.Solution{
 		RewardID: solution.RewardID,
 		Position: solution.Reward.Position,
 	}).Error
