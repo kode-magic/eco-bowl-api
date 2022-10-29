@@ -70,7 +70,7 @@ func (d solutionRepo) Create(solution *core.Solution) (*core.Solution, map[strin
 
 func (d solutionRepo) List(event string) (*[]core.Solution, error) {
 	var dbSolutions []infra.Solution
-	err := d.db.Preload("Team").Where("event_id = ?", event).Order("ASC").Find(&dbSolutions).Error
+	err := d.db.Preload("Team").Where("event_id = ?", event).Order("position asc").Find(&dbSolutions).Error
 
 	if err != nil {
 		return nil, err
