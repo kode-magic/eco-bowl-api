@@ -48,12 +48,7 @@ func ToTraineePersistence(model core.Trainee) *infra.Trainee {
 func (t traineeRepo) Create(trainee *core.Trainee) (*core.Trainee, map[string]string) {
 	infraErr := map[string]string{}
 
-	createTrainee := infra.Trainee{
-		Forename: trainee.Forename,
-		Surname:  trainee.Surname,
-		Phone:    trainee.Phone,
-		Gender:   string(trainee.Gender),
-	}
+	createTrainee := ToTraineePersistence(*trainee)
 
 	err := t.db.Create(&createTrainee).Error
 
@@ -62,7 +57,7 @@ func (t traineeRepo) Create(trainee *core.Trainee) (*core.Trainee, map[string]st
 		return nil, infraErr
 	}
 
-	return ToTraineeDomain(createTrainee), nil
+	return ToTraineeDomain(*createTrainee), nil
 }
 
 func (t traineeRepo) List(event string) (*[]core.Trainee, error) {
@@ -123,6 +118,19 @@ func (t traineeRepo) GetByEmail(event, email string) (*core.Trainee, error) {
 	}
 
 	return ToTraineeDomain(*trainee), nil
+}
+
+func (t traineeRepo) AddToTeam(trainee *core.Trainee) (*core.Trainee, error) {
+	var model infra.Trainee
+	err := t.db.Model(&model).Where("id = ?", model.ID).Updates(infra.Trainee{
+		TeamID: trainee.TeamID,
+	}).Error
+
+	if err != nil {
+		return nil, err
+	}
+
+	return trainee, nil
 }
 
 func NewTraineeRepo(db *gorm.DB) *traineeRepo {
