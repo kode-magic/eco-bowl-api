@@ -24,6 +24,7 @@ func main() {
 		Reward:    dbService.Reward,
 		Trainee:   dbService.Trainee,
 		Team:      dbService.Team,
+		Solution:  dbService.Solution,
 	}
 
 	app.App(base)
