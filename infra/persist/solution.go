@@ -32,6 +32,13 @@ func toSolutionDomain(model infra.Solution) *core.Solution {
 			Name:        model.Team.Name,
 			Description: model.Team.Description,
 		},
+		Reward: core.Reward{
+			ID:          model.RewardID,
+			Name:        model.Reward.Name,
+			Description: model.Reward.Description,
+			Position:    model.Position,
+		},
+		Position:  model.Position,
 		CreatedAt: model.CreatedAt,
 		UpdatedAt: model.UpdatedAt,
 	}
@@ -117,6 +124,20 @@ func (d solutionRepo) Update(solution *core.Solution) (string, error) {
 	}
 
 	return "Solution updated successful", nil
+}
+
+func (d solutionRepo) AddReward(solution *core.Solution) (string, error) {
+	var model infra.Solution
+	err := d.db.Model(&model).Where("id = ?", model.ID).Updates(infra.Solution{
+		RewardID: solution.RewardID,
+		Position: solution.Reward.Position,
+	}).Error
+
+	if err != nil {
+		return "", err
+	}
+
+	return "Solution reward added successfully ", nil
 }
 
 func (d solutionRepo) Delete(id string) (string, error) {
