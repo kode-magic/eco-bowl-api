@@ -56,3 +56,7 @@ func (t TeamService) Create(param *TeamRequest) (*core.Team, map[string]string) 
 
 	return nil, errMessage
 }
+
+func (t TeamService) List(event string) (*[]core.Team, error) {
+	return t.Repo.List(event)
+}
