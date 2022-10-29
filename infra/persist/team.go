@@ -33,6 +33,7 @@ func toTeamDomain(model infra.Team) *core.Team {
 			UpdatedAt:     trainee.UpdatedAt,
 		}
 	}
+
 	return &core.Team{
 		ID:          model.ID.String(),
 		Name:        model.Name,
