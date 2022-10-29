@@ -2,7 +2,6 @@ package entities
 
 import (
 	"github.com/google/uuid"
-	"github.com/kode-magic/eco-bowl-api/core/commons"
 	"github.com/kode-magic/go-bowl/ulids"
 	"gorm.io/gorm"
 	"time"
@@ -23,17 +22,17 @@ type (
 	}
 
 	Business struct {
-		ID            uuid.UUID              `gorm:"type:uuid;"`
-		Name          string                 `gorm:"not null;"`
-		Description   string                 `gorm:"not null;"`
-		Type          commons.BusinessTypes  `gorm:"not null;"`
-		Level         commons.BusinessLevels `gorm:"not null;"`
-		Founded       time.Time              `gorm:"not null;"`
-		Growths       []Growth               `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
-		ContactPerson Contact                `gorm:"type:jsonb;"`
-		Entrepreneurs []Entrepreneur         `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
-		CreatedAt     time.Time              `gorm:"default:CURRENT_TIMESTAMP"`
-		UpdatedAt     time.Time              `gorm:"default:CURRENT_TIMESTAMP"`
+		ID            uuid.UUID      `gorm:"type:uuid;"`
+		Name          string         `gorm:"not null;"`
+		Description   string         `gorm:"not null;"`
+		Type          string         `gorm:"not null;"`
+		Level         string         `gorm:"not null;"`
+		Founded       time.Time      `gorm:"not null;"`
+		Growths       []Growth       `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
+		ContactPerson Contact        `gorm:"type:jsonb;"`
+		Entrepreneurs []Entrepreneur `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
+		CreatedAt     time.Time      `gorm:"default:CURRENT_TIMESTAMP"`
+		UpdatedAt     time.Time      `gorm:"default:CURRENT_TIMESTAMP"`
 	}
 )
 
