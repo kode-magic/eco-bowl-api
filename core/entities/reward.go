@@ -25,7 +25,7 @@ type (
 func (r *Reward) Validate() map[string]string {
 	var errMessages = make(map[string]string)
 	if r.Name == "" {
-		errMessages["name"] = "centre name is required"
+		errMessages["name"] = "name is required"
 	}
 	if r.Description == "" {
 		errMessages["address"] = "address is required"
