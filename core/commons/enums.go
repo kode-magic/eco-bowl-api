@@ -21,11 +21,23 @@ const (
 	Oct      Months        = "10"
 	Nov      Months        = "11"
 	Dec      Months        = "12"
+
+	// Company BusinessTypes
+	Company BusinessTypes = "Company"
+	Hub     BusinessTypes = "Hub"
+	Idea    BusinessTypes = "Idea"
+
+	prototype  BusinessLevels = "Prototype"
+	idea       BusinessLevels = "Idea"
+	scale      BusinessLevels = "Scale-Up"
+	production BusinessLevels = "Production"
 )
 
 type (
-	Roles         string
-	Genders       string
-	AccountStatus string
-	Months        string
+	Roles          string
+	Genders        string
+	AccountStatus  string
+	Months         string
+	BusinessTypes  string
+	BusinessLevels string
 )
