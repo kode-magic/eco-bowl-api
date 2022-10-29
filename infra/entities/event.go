@@ -15,6 +15,8 @@ type Event struct {
 	EndDate       time.Time `gorm:"not null;"`
 	InstitutionID string    `gorm:"not null;"`
 	Institution   Institution
+	Trainees      []Trainee `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
+	Teams         []Team    `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 	CreatedAt     time.Time `gorm:"default:CURRENT_TIMESTAMP"`
 	UpdatedAt     time.Time `gorm:"default:CURRENT_TIMESTAMP"`
 }
