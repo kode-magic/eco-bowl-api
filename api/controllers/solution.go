@@ -134,14 +134,58 @@ func (i *Solution) Get(ctx *fiber.Ctx) error {
 	return nil
 }
 
+func (i *Solution) AddedReward(ctx *fiber.Ctx) error {
+	id := ctx.Params("id", "")
+
+	var requestBody service.SolutionRewardRequest
+
+	requestBodyErr := ctx.BodyParser(&requestBody)
+
+	requestBody.Solution = id
+
+	if requestBodyErr != nil {
+		err := ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": requestBodyErr.Error(),
+		})
+
+		if err != nil {
+			return err
+		}
+
+		return nil
+	}
+
+	res, err := i.Service.AddedReward(&requestBody)
+
+	if err != nil {
+		err := ctx.Status(fiber.StatusInternalServerError).JSON(err)
+
+		if err != nil {
+			return err
+		}
+		return nil
+	}
+
+	ctxError := ctx.Status(fiber.StatusCreated).JSON(fiber.Map{
+		"success": true,
+		"data":    res,
+	})
+
+	if ctxError != nil {
+		return ctxError
+	}
+
+	return nil
+}
+
 func SolutionRouter(router fiber.Router, services service.BaseService, session *session.Store) {
 	solution := SolutionConstructor(service.SolutionService{Repo: services.Solution}, session)
 	routes := router.Group("/solution")
 	routes.Post("/", solution.Create)
 	routes.Get("/", solution.List)
 	routes.Get("/:id", solution.Get)
+	routes.Patch("/:id", solution.AddedReward)
 
 	authRoutes := router.Group("/auth")
 	authRoutes.Post("/:event_id/solution", solution.Create)
-
 }
