@@ -34,7 +34,7 @@ func (i *Event) Validate() map[string]string {
 		errMessages["name"] = "centre name is required"
 	}
 	if i.Institution.ID == "" {
-		errMessages["institution"] = "address is required"
+		errMessages["institution"] = "institution is required"
 	}
 	if i.Description == "" {
 		errMessages["description"] = "description is required"
