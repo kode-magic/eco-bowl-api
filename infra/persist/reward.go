@@ -53,9 +53,9 @@ func (d rewardRepo) Create(reward *core.Reward) (*core.Reward, map[string]string
 	return toRewardDomain(*createCentre), nil
 }
 
-func (d rewardRepo) List() (*[]core.Reward, error) {
+func (d rewardRepo) List(event string) (*[]core.Reward, error) {
 	var dbRewards []infra.Reward
-	err := d.db.Find(&dbRewards).Error
+	err := d.db.Where("event_id = ?", event).Find(&dbRewards).Error
 
 	if err != nil {
 		return nil, err
