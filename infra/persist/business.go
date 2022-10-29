@@ -1,0 +1,124 @@
+package persist
+
+import (
+	"errors"
+	enum "github.com/kode-magic/eco-bowl-api/core/commons"
+	core "github.com/kode-magic/eco-bowl-api/core/entities"
+	infra "github.com/kode-magic/eco-bowl-api/infra/entities"
+	"github.com/kode-magic/go-bowl/ulids"
+	"gorm.io/gorm"
+)
+
+type businessRepo struct {
+	db *gorm.DB
+}
+
+var _ core.RewardRepo = &businessRepo{}
+
+func NewBusinessRepo(db *gorm.DB) *businessRepo {
+	return &businessRepo{db}
+}
+
+func toRewardDomain(model infra.Business) *core.Business {
+	return &core.Business{
+		ID:          model.ID.String(),
+		Name:        model.Name,
+		Description: model.Description,
+		Founded:     model.Founded,
+		Type:        enum.BusinessTypes(model.Type),
+		CreatedAt:   model.CreatedAt,
+		UpdatedAt:   model.UpdatedAt,
+	}
+}
+
+func toRewardPersistence(model core.Reward) *infra.Reward {
+	return &infra.Reward{
+		Name:        model.Name,
+		Description: model.Description,
+		EventID:     model.Event.ID,
+		Position:    model.Position,
+	}
+}
+
+func (d rewardRepo) Create(reward *core.Reward) (*core.Reward, map[string]string) {
+	infraErr := map[string]string{}
+
+	createCentre := toRewardPersistence(*reward)
+
+	err := d.db.Create(&createCentre).Error
+
+	if err != nil {
+		infraErr["db_error"] = err.Error()
+		return nil, infraErr
+	}
+
+	return toRewardDomain(*createCentre), nil
+}
+
+func (d rewardRepo) List(event string) (*[]core.Reward, error) {
+	var dbRewards []infra.Reward
+	err := d.db.Where("event_id = ?", event).Find(&dbRewards).Error
+
+	if err != nil {
+		return nil, err
+	}
+
+	rewards := make([]core.Reward, len(dbRewards))
+
+	for i, reward := range dbRewards {
+		toDomain := toRewardDomain(reward)
+
+		if err != nil {
+			return nil, err
+		}
+
+		rewards[i] = *toDomain
+	}
+
+	return &rewards, nil
+
+}
+
+func (d rewardRepo) Get(id string) (*core.Reward, error) {
+	var reward infra.Reward
+
+	ID := ulids.ConvertToUUID(id)
+
+	err := d.db.Where("id = ?", ID).Take(&reward).Error
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, errors.New("reward not found")
+		} else {
+			return nil, err
+		}
+
+	}
+
+	return toRewardDomain(reward), nil
+}
+
+func (d rewardRepo) Update(reward *core.Reward) (string, error) {
+	var model infra.Reward
+	err := d.db.Model(&model).Where("id = ?", reward.ID).Updates(infra.Reward{
+		Name:        reward.Name,
+		Description: reward.Description,
+		EventID:     reward.Event.ID,
+		Position:    model.Position,
+	}).Error
+
+	if err != nil {
+		return "", err
+	}
+
+	return "Reward updated successful", nil
+}
+
+func (d rewardRepo) Delete(id string) (string, error) {
+	var reward infra.Reward
+	ID := ulids.ConvertToUUID(id)
+	err := d.db.Delete(&reward, "id = ?", ID).Error
+	if err != nil {
+		return "", err
+	}
+	return "Reward deleted successfully", nil
+}
