@@ -11,6 +11,8 @@ type (
 		EndDate       time.Time   `json:"endDate"`
 		InstitutionID string      `json:"institutionId"`
 		Institution   Institution `json:"institution"`
+		Trainees      []Trainee   `json:"trainees"`
+		Teams         []Team      `json:"teams"`
 		CreatedAt     time.Time   `json:"createdAt"`
 		UpdatedAt     time.Time   `json:"updatedAt"`
 	}
